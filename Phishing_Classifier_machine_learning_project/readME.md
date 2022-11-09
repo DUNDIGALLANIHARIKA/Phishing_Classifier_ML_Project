@@ -1,13 +1,13 @@
 Creating conda environment
 ```
-conda create -p venv python==3.7 -y
+conda create -p env python==3.7 -y
 ```
 ```
-conda activate venv/
+conda activate env/
 ```
 OR 
 ```
-conda activate venv
+conda activate env
 ```
 
 ```

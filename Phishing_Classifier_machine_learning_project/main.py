@@ -1,38 +1,38 @@
 from wsgiref import simple_server
-from flask import Flask,request
+from flask import Flask, request
 from flask import Response
 import os
 from flask_cors import CORS, cross_origin
-#from prediction_Validation_Insertion import pred_validation
-#from trainingModel import trainModel
-#from training_Validation_Insertion import train_validation
+from Phishing.Prediction_Validation_Insertion import Pred_Validation
+from Phishing.TrainingModel import TrainModel
+from Phishing.Training_Validation_Insertion import Train_Validation
 import flask_monitoringdashboard as dashboard
-#from predictFromModel import prediction
+from Phishing.PredictFromModel import Prediction
 
-#os.putenv('LANG', 'en_US.UTF-8')
-#os.putenv('LC_ALL', 'en_US.UTF-8')
+os.putenv('LANG', 'en_US.UTF-8')
+os.putenv('LC_ALL', 'en_US.UTF-8')
 
-#app=Flask(__name__)
-#dashboard.bind(app)
-#CORS(app)
+app = Flask(__name__)
+dashboard.bind(app)
+CORS(app)
 
 
 
 @app.route("/predict", methods=['POST'])
 @cross_origin()
-def predictRouteClient():
+def PredictRouteClient():
     try:
         if request.json['folderPath'] is not None:
             path = request.json['folderPath']
 
-            pred_val = pred_validation(path) #object initialization
+            pred_val = Pred_Validation(path) #object initialization
 
-            pred_val.prediction_validation() #calling the prediction_validation function
+            pred_val.Prediction_Validation() #calling the prediction_validation function
 
-            pred = prediction(path) #object initialization
+            pred = Prediction(path) #object initialization
 
             # predicting for dataset present in database
-            path = pred.predictionFromModel()
+            path = pred.PredictionFromModel()
             return Response("Prediction File created at %s!!!" % path)
 
     except ValueError:
@@ -46,18 +46,18 @@ def predictRouteClient():
 
 @app.route("/train", methods=['POST'])
 @cross_origin()
-def trainRouteClient():
+def TrainRouteClient():
 
     try:
         if request.json['folderPath'] is not None:
             path = request.json['folderPath']
-            train_valObj = train_validation(path) #object initialization
+            train_valObj = Train_Validation(path) #object initialization
 
-            train_valObj.train_validation()#calling the training_validation function
+            train_valObj.Train_Validation()#calling the training_validation function
 
 
-            trainModelObj = trainModel() #object initialization
-            trainModelObj.trainingModel() #training the model for the files in the table
+            trainModelObj = TrainModel() #object initialization
+            trainModelObj.TrainingModel() #training the model for the files in the table
 
 
     except ValueError:
@@ -80,3 +80,6 @@ if __name__ == "__main__":
     httpd = simple_server.make_server(host, port, app)
     print("Serving on %s %d" % (host, port))
     httpd.serve_forever()
+
+    
+
