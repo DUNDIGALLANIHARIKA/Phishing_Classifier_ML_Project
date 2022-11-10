@@ -9,38 +9,11 @@ from Phishing.Training_Validation_Insertion import Train_Validation
 import flask_monitoringdashboard as dashboard
 from Phishing.PredictFromModel import Prediction
 
-os.putenv('LANG', 'en_US.UTF-8')
-os.putenv('LC_ALL', 'en_US.UTF-8')
+
 
 app = Flask(__name__)
 dashboard.bind(app)
 CORS(app)
-
-
-
-@app.route("/predict", methods=['POST'])
-@cross_origin()
-def PredictRouteClient():
-    try:
-        if request.json['folderPath'] is not None:
-            path = request.json['folderPath']
-
-            pred_val = Pred_Validation(path) #object initialization
-
-            pred_val.Prediction_Validation() #calling the prediction_validation function
-
-            pred = Prediction(path) #object initialization
-
-            # predicting for dataset present in database
-            path = pred.PredictionFromModel()
-            return Response("Prediction File created at %s!!!" % path)
-
-    except ValueError:
-        return Response("Error Occurred! %s" %ValueError)
-    except KeyError:
-        return Response("Error Occurred! %s" %KeyError)
-    except Exception as e:
-        return Response("Error Occurred! %s" %e)
 
 
 
@@ -73,10 +46,36 @@ def TrainRouteClient():
         return Response("Error Occurred! %s" % e)
     return Response("Training successfull!!")
 
-port = int(os.getenv("PORT"))
+
+@app.route("/predict", methods=['POST'])
+@cross_origin()
+def PredictRouteClient():
+    try:
+        if request.json['folderPath'] is not None:
+            path = request.json['folderPath']
+
+            pred_val = Pred_Validation(path) #object initialization
+
+            pred_val.Prediction_Validation() #calling the prediction_validation function
+
+            pred = Prediction(path) #object initialization
+
+            # predicting for dataset present in database
+            path = pred.PredictionFromModel()
+            return Response("Prediction File created at %s!!!" % path)
+
+    except ValueError:
+        return Response("Error Occurred! %s" %ValueError)
+    except KeyError:
+        return Response("Error Occurred! %s" %KeyError)
+    except Exception as e:
+        return Response("Error Occurred! %s" %e)
+
+
+#port = int(os.getenv("PORT"))
 if __name__ == "__main__":
-    host = '0.0.0.0'
-    #port = 5000
+    host = '127.0.0.1'
+    port = 5000
     httpd = simple_server.make_server(host, port, app)
     print("Serving on %s %d" % (host, port))
     httpd.serve_forever()

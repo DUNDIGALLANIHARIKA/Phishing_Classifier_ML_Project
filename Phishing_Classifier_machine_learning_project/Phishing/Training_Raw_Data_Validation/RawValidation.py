@@ -199,7 +199,7 @@ class Raw_Data_Validation:
             f.close()
 
         except Exception as e:
-            f = open("Phishing/Training_Logs/nameValidationLog.txt", 'a+')
+            f = open("Phishing/Training_Logs/NameValidationLog.txt", 'a+')
             self.logger.log(f, "Error occured while validating FileName: %s" % e)
             f.close()
             raise e
@@ -207,8 +207,7 @@ class Raw_Data_Validation:
     def ValidateColumnLength(self,NumberOfColumns):
         """
             This function helps in validating number of columns in csv as same as schema file. If the data is same and nmber of columns 
-            are same then data is sent to good raw data folder.Otherwise,bad raw data folder. In csv , if the first column name is 
-            missing, then function changes the missing name to "wafer".
+            are same then data is sent to good raw data folder.Otherwise,bad raw data folder. 
         """
 
         try:
@@ -259,7 +258,6 @@ class Raw_Data_Validation:
                         self.logger.log(f,"Invalid Column Length for the file!! File moved to Bad Raw Folder : %s" % file)
                         break
                 if count==0:
-                    #csv.rename(columns={"Unnamed: 0": "Wafer"}, inplace=True)
                     csv.to_csv("Phishing/Training_Raw_files_validated/Good_Raw/" + file, index=None, header=True)
 
         except OSError:

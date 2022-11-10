@@ -22,15 +22,8 @@ class Prediction:
             data_getter=Data_Loader_Prediction.Data_Getter_Pred(self.file_object,self.logger)
             data=data_getter.Get_Data()
 
-            #code change
-            # wafer_names=data['Wafer']
-            # data=data.drop(labels=['Wafer'],axis=1)
-
             preprocessor=Preprocessing.Preprocessor(self.file_object,self.logger)
-            #data = preprocessor.dropUnnecessaryColumns(data,['veiltype'])
-
-            # replacing '?' values with np.nan as discussed in the EDA part
-
+            
             data = preprocessor.ReplaceInvalidValuesWithNull(data)
 
             is_null_present,cols_with_missing_values=preprocessor.IsNullPresent(data)
@@ -44,8 +37,6 @@ class Prediction:
             file_loader=File_Methods.File_Operation(self.file_object,self.logger)
             kmeans=file_loader.Load_Model('KMeans')
 
-            ##Code changed
-            #pred_data = data.drop(['Wafer'],axis=1)
             clusters=kmeans.predict(data)#drops the first column for cluster prediction
             data['clusters']=clusters
             clusters=data['clusters'].unique()
@@ -70,24 +61,7 @@ class Prediction:
             raise ex
         return path
 
-            # old code
-            # i=0
-            # for row in data:
-            #     cluster_number=kmeans.predict([row])
-            #     model_name=file_loader.find_correct_model_file(cluster_number[0])
-            #
-            #     model=file_loader.load_model(model_name)
-            #     #row= sparse.csr_matrix(row)
-            #     result=model.predict([row])
-            #     if (result[0]==-1):
-            #         category='Bad'
-            #     else:
-            #         category='Good'
-            #     self.predictions.write("Wafer-"+ str(wafer_names[i])+','+category+'\n')
-            #     i=i+1
-            #     self.log_writer.log(self.file_object,'The Prediction is :' +str(result))
-            # self.log_writer.log(self.file_object,'End of Prediction')
-            #print(result)
+           
 
 
 

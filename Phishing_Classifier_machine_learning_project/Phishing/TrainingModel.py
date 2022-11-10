@@ -25,13 +25,6 @@ class TrainModel:
             ##Data preprocessing
             preprocessor = Preprocessing.Preprocessor(self.file_object,self.logger)
 
-            #data=preprocessor.remove_columns(data,['Wafer']) # remove the unnamed column as it doesn't contribute to prediction.
-
-            #removing unwanted columns as discussed in the EDA part in ipynb file
-            #data = preprocessor.dropUnnecessaryColumns(data,['veiltype'])
-
-            #repalcing '?' values with np.nan as discussed in the EDA part
-
             data = preprocessor.ReplaceInvalidValuesWithNull(data)
 
             # check if missing values are present in the dataset
@@ -40,10 +33,6 @@ class TrainModel:
             # if missing values are there, replace them appropriately.
             if(is_null_present):
                 data=preprocessor.Impute_Missing_Values(data,cols_with_missing_values) # missing value imputation
-
-            # get encoded values for categorical data
-
-            #data = preprocessor.encodeCategoricalValues(data)
 
             # create separate features and labels
             X, Y = preprocessor.Seperate_Label_Feature(data, label_column_name='Result')
